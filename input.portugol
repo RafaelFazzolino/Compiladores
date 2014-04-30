@@ -1,0 +1,23 @@
+funcao primeira
+declare x
+leia x
+declare y
+leia y
+se x > y entao imprima "lalalalalalalalalala"
+fim
+fim
+ 
+funcao main
+declare z
+receba z
+declare a
+receba a
+declare x
+receba x
+se a > z entao se z < x entao imprima "lalalala"
+senao se 3 < 4 entao imprima "huhuhuhuhuh"
+fim
+senao imprima "hahahahaha"
+fim
+fim
+fimFunc

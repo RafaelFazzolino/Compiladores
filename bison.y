@@ -43,7 +43,10 @@ NewLine:	{qntLinha++; PulaLinha();}
 Final:
 	|{tab--; } Tab Fim
 	;
-
+Corpo:
+        |Comando
+	|Estrutura
+	;
 Comando: Function
 	| Declare
 	| Atribui
@@ -54,7 +57,7 @@ Comando: Function
        	;
        	
 Function:
-	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"Function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Tab
+	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Tab Corpo Fim {Inserir(&saida,$3); Inserir(&saida, "()");} NewLine
 	;
 	
 Declare:
@@ -142,17 +145,19 @@ void main(void){
 	varUsadas = NULL;
 	erroSaida = NULL;
 	yyparse();
-	printf("\nIfs: %d\n", qntIf);
-	printf("\nEstruturas: %d\n", qntEstru);
-	printf("\nEnds: %d\n", qntEnd);
-	printf("\nThens: %d\n", qntThen);
-	printf("\nCondicoes: %d\n", qntCondicao);
 	
-	printf("Variaveis Declaradas: ");
+	printf("\n--Ifs: %d\n", qntIf);
+	printf("\n--Estruturas: %d\n", qntEstru);
+	printf("\n--Ends: %d\n", qntEnd);
+	printf("\n--Thens: %d\n", qntThen);
+	printf("\n--Condicoes: %d\n", qntCondicao);
+	
+	printf("--Variaveis Declaradas: ");
 	Imprime(varDeclaradas);
-	printf("\nVariaveis Usadas: ");
+	printf("\n--Variaveis Usadas: ");
 	Imprime(varUsadas);
 	printf("\n\n");
+	
 	
 	if(!(qntIf == qntCondicao && qntEstru == qntEnd && qntIf == qntThen))
 		correto = 0;

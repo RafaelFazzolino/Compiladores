@@ -69,7 +69,6 @@ void Imprime(Fila * temp)
 	}
 
 }
-
 void PulaLinha()
 {
 	Inserir(&saida,"\n");	
@@ -109,8 +108,6 @@ int CheckVariaveis(Fila * declaradas, Fila * usadas)
 			Inserir(&erroSaida, " nao declarada!");
 			return 0;	
 		}
-		else if(declarou == 1)
-			return 1;
 		usadas = usadas->proximo;
 	}
 	
