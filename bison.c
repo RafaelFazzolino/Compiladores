@@ -1688,7 +1688,7 @@ yyreduce:
   case 63:
 /* Line 1787 of yacc.c  */
 #line 123 "bison.y"
-    { Inserir(&saida,(yyvsp[(1) - (1)].strval)); }
+    { Inserir(&saida,"'"); Inserir(&saida,(yyvsp[(1) - (1)].strval));Inserir(&saida,"'"); }
     break;
 
   case 64:

@@ -14,7 +14,7 @@ declare a
 receba a
 declare x
 receba x
-se a > z entao se z < x entao imprima "lalalala"
+se a > 2 entao se z < 3 entao imprima "lalalala"
 senao se 3 < 4 entao imprima "huhuhuhuhuh"
 fim
 senao imprima "hahahahaha"

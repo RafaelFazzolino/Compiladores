@@ -57,7 +57,7 @@ Comando: Function
        	;
        	
 Function:
-	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Tab Corpo Fim {Inserir(&saida,$3); Inserir(&saida, "()");}
+	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Tab Corpo Fim {Inserir(&saida,$3); Inserir(&saida, "()");} NewLine
 	;
 	
 Declare:

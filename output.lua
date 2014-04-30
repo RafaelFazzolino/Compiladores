@@ -29,11 +29,11 @@ function main()
 		a = io.read()
 		local x
 		x = io.read()
-		if a > z then 
-			if z < x then 
+		if a > '2' then 
+			if z < '3' then 
 				print("lalalala") 
 				
-			elseif 3 < 4 then 
+			elseif '3' < '4' then 
 				print("huhuhuhuhuh") 
 				
 			end
