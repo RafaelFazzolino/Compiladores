@@ -13,6 +13,7 @@ NUMBER [0-9]
 
 %% /*REGRAS:*/
 
+"senao se"							return ELSEIF;
 "fimFunc"					{yyterminate(); return FIMFUNC;}
 (f|F)+(uncao)+						return FUNCAO;
 "declare"							return DECLARACAO;
@@ -31,7 +32,7 @@ NUMBER [0-9]
 (\=)+ 					    			return IGUAL;
 (ou)+ 					    			return OU;
 (e)+ 					    			return AND;
-(senao)+ 				    			return ELSEIF;
+(senao)+ 				    			return ELSE;
 (enquanto)+ 				    			return WHILE;
 (faca)+ 				    			return DO;
 (entao)+ 		                    			return THEN;

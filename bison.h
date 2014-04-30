@@ -56,21 +56,22 @@ extern int yydebug;
      DO = 265,
      THEN = 266,
      WHILE = 267,
-     TERMINOU = 268,
-     DECLARACAO = 269,
-     FIMFUNC = 270,
-     FUNCAO = 271,
-     PRINT = 272,
-     READ = 273,
-     LOCAL = 274,
-     MAIOR = 275,
-     MENOR = 276,
-     IGUAL = 277,
-     SOMA = 278,
-     SUBT = 279,
-     MULT = 280,
-     DIVIDE = 281,
-     ATRIBUI = 282
+     ELSE = 268,
+     TERMINOU = 269,
+     DECLARACAO = 270,
+     FIMFUNC = 271,
+     FUNCAO = 272,
+     PRINT = 273,
+     READ = 274,
+     LOCAL = 275,
+     MAIOR = 276,
+     MENOR = 277,
+     IGUAL = 278,
+     SOMA = 279,
+     SUBT = 280,
+     MULT = 281,
+     DIVIDE = 282,
+     ATRIBUI = 283
    };
 #endif
 
@@ -86,7 +87,7 @@ typedef union YYSTYPE
 
 
 /* Line 2053 of yacc.c  */
-#line 90 "bison.h"
+#line 91 "bison.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

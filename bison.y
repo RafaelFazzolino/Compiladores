@@ -15,7 +15,7 @@
 
 %token <strval> T_NUMBER
 %token <strval> T_STRING TEXTO
-%token AND OU IF ELSEIF DO THEN WHILE
+%token AND OU IF ELSEIF DO THEN WHILE ELSE
 %token TERMINOU DECLARACAO FIMFUNC FUNCAO
 %token <strval> PRINT READ LOCAL 
 %token MAIOR MENOR IGUAL SOMA SUBT MULT DIVIDE ATRIBUI
@@ -50,19 +50,20 @@ Comando: Function
        	| Print
        	| Read
        	| Estrutura 
+	| Comando Comando
        	;
        	
 Function:
-	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"Function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} {tab++;}
+	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"Function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Tab
 	;
 	
 Declare:
-	DECLARACAO {Inserir(&saida,"local ");} T_STRING {Inserir(&saida,$3); Inserir(&varDeclaradas, $3);} 
+	DECLARACAO {Inserir(&saida,"local ");} T_STRING {Inserir(&saida,$3); Inserir(&varDeclaradas, $3);} NewLine Tab
 	;
 	
 Atribui:
-	Variavel ATRIBUI {Inserir(&saida, " = ");} Condicao {qntCondicao--;}
-	;
+	Variavel ATRIBUI {Inserir(&saida, " = ");} Condicao {qntCondicao--;} NewLine Tab
+	; 
        
 Estrutura:
 	If
@@ -75,17 +76,29 @@ Entrada: TEXTO {Inserir(&saida,$1);}
 Fim:
        	TERMINOU {qntEnd++; Inserir(&saida,"end\n");}
        	;
+FimIf:
+	TERMINOU {qntEnd++; Inserir(&saida,"end\n");}
+       |ElseIf
+       |Else
+	;
 
+ElseIf:
+	ELSEIF {qntEnd++; Inserir(&saida, "elseif "); qntIf++; qntEstru++;} Condicao Then {tab++;} NewLine Tab Comando NewLine {tab--;} Tab FimIf
+	;
+Else:
+	ELSE {qntEnd++; Inserir(&saida, "else"); qntIf++; qntEstru++; qntThen++; qntCondicao++;} {tab++;} NewLine Tab Comando NewLine {tab--;} Tab FimIf
+  	;
+	
 
 Print:
-   	PRINT { Inserir(&saida,"print("); } Entrada { Inserir(&saida,") ");}
+   	PRINT { Inserir(&saida,"print("); } Entrada { Inserir(&saida,") ");} NewLine Tab
    	;
    	
 Read:
-	READ Variavel {Inserir(&saida," = io.read()");} 
-
+	READ Variavel {Inserir(&saida," = io.read()");} NewLine Tab
+	;
 If:
-	IF { qntIf++; qntEstru++;Inserir(&saida,"if ");} Condicao Then {tab++;} NewLine Tab Comando NewLine {tab--;} Tab Fim
+	IF { qntIf++; qntEstru++;Inserir(&saida,"if ");} Condicao Then {tab++;} NewLine Tab Comando NewLine {tab--;} Tab FimIf
   	;
 
 Condicao:
