@@ -1,47 +1,25 @@
 
---Ifs: 5
+--Ifs: 1
 
---Estruturas: 7
+--Estruturas: 2
 
---Ends: 7
+--Ends: 2
 
---Thens: 5
+--Thens: 1
 
---Condicoes: 5
---Variaveis Declaradas: xyzax
---Variaveis Usadas: xyza
+--Condicoes: 1
+--Variaveis Declaradas: xy
+--Variaveis Usadas: xy
 
-function primeira()
+function main()
 	local x
-	x = io.read()
-	local y
-	y = io.read()
-	if x > y then 
-		print("lalalalalalalalalala") 
+	x = 2
+	
+	while x < 10 do 
+		print("lalalala") 
+		x = x + 1
 		
 	end
-end
-primeira()
-function main()
-		local z
-		z = io.read()
-		local a
-		a = io.read()
-		local x
-		x = io.read()
-		if a > '2' then 
-			if z < '3' then 
-				print("lalalala") 
-				
-			elseif '3' < '4' then 
-				print("huhuhuhuhuh") 
-				
-			end
-
-		else
-			print("hahahahaha") 
-			
-		end
 end
 main()
 

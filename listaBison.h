@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX 30
+#define MAX 500
 
 int qntFuncao = 0;
 int qntLinha = 0;

@@ -1,23 +1,11 @@
-funcao primeira
+funcao main
 declare x
 leia x
 declare y
 leia y
-se x > y entao imprima "lalalalalalalalalala"
-fim
-fim
- 
-funcao main
-declare z
-receba z
-declare a
-receba a
-declare x
-receba x
-se a > 2 entao se z < 3 entao imprima "lalalala"
-senao se 3 < 4 entao imprima "huhuhuhuhuh"
-fim
-senao imprima "hahahahaha"
+enquanto x < y faca
+imprima "lalalala"
+x = x + 1
 fim
 fim
 fimFunc

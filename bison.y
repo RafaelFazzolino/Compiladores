@@ -47,12 +47,12 @@ Corpo:
         |Comando
 	|Estrutura
 	;
-Comando: Function
-	| Declare
+Comando:  Declare
+	| Function
 	| Atribui
        	| Print
        	| Read
-       	| Estrutura 
+       	| Estrutura
 	| Comando Comando
        	;
        	
@@ -69,7 +69,8 @@ Atribui:
 	; 
        
 Estrutura:
-	If
+	  If
+	| While
 	;
 
 Entrada: TEXTO {Inserir(&saida,$1);}
@@ -80,7 +81,7 @@ Fim:
        	TERMINOU {qntEnd++; Inserir(&saida,"end\n");}
        	;
 FimIf:
-	TERMINOU {qntEnd++; Inserir(&saida,"end\n");}
+	Fim
        |ElseIf
        |Else
 	;
@@ -103,7 +104,12 @@ Read:
 If:
 	IF { qntIf++; qntEstru++;Inserir(&saida,"if ");} Condicao Then {tab++;} NewLine Tab Comando NewLine {tab--;} Tab FimIf
   	;
+While:
+	WHILE { qntIf++; qntEstru++; Inserir(&saida, "while ");} Condicao Do {tab++;} NewLine Tab Comando NewLine {tab--;} Tab Fim
+	;
 
+Do:
+	DO {qntThen++; Inserir(&saida," do ");}
 Condicao:
   	Numero {qntCondicao++;}
 	| Variavel {qntCondicao++;}
@@ -120,7 +126,7 @@ Variavel:
 	;
 
 Numero:
-	T_NUMBER { Inserir(&saida,"'"); Inserir(&saida,$1);Inserir(&saida,"'"); }
+	T_NUMBER { Inserir(&saida,$1); }
    	;
 
 Operador:

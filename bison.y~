@@ -47,12 +47,12 @@ Corpo:
         |Comando
 	|Estrutura
 	;
-Comando: Function
-	| Declare
+Comando:  Declare
+	| Function
 	| Atribui
        	| Print
        	| Read
-       	| Estrutura 
+       	| Estrutura
 	| Comando Comando
        	;
        	
@@ -80,7 +80,7 @@ Fim:
        	TERMINOU {qntEnd++; Inserir(&saida,"end\n");}
        	;
 FimIf:
-	TERMINOU {qntEnd++; Inserir(&saida,"end\n");}
+	Fim
        |ElseIf
        |Else
 	;
