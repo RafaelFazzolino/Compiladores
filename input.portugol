@@ -7,5 +7,9 @@ enquanto x < y faca
 imprima "lalalala"
 x = x + 1
 fim
+se 2 > 3 entao se 3 < 4 entao imprima "lalalalalala"
+fim
+senao imprima "lalalalal2"
+fim
 fim
 fimFunc

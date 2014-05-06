@@ -1,23 +1,34 @@
 
---Ifs: 1
+--Ifs: 4
 
---Estruturas: 2
+--Estruturas: 5
 
---Ends: 2
+--Ends: 5
 
---Thens: 1
+--Thens: 4
 
---Condicoes: 1
+--Condicoes: 4
 --Variaveis Declaradas: xy
 --Variaveis Usadas: xy
 
 function main()
 	local x
-	x = 2
-	
-	while x < 10 do 
+	x = io.read()
+	local y
+	y = io.read()
+	while x < y do 
 		print("lalalala") 
 		x = x + 1
+		
+	end
+if 2 > 3 then 
+		if 3 < 4 then 
+			print("lalalalalala") 
+			
+		end
+
+	else
+		print("lalalalal2") 
 		
 	end
 end
