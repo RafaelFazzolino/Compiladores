@@ -126,7 +126,7 @@ Variavel:
 	;
 
 Numero:
-	T_NUMBER { Inserir(&saida,$1); }
+	T_NUMBER { Inserir(&saida,"'"); Inserir(&saida,$1);Inserir(&saida,"'"); }
    	;
 
 Operador:
