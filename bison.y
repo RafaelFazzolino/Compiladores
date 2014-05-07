@@ -57,11 +57,11 @@ Comando:  Declare
        	;
        	
 Function:
-	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Tab Corpo Fim {Inserir(&saida,$3); Inserir(&saida, "()");} NewLine
+	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Corpo {tab--;} Fim {Inserir(&saida,$3); Inserir(&saida, "()");} NewLine
 	;
 	
 Declare:
-	DECLARACAO {Inserir(&saida,"local ");} T_STRING {Inserir(&saida,$3); Inserir(&varDeclaradas, $3);} NewLine Tab
+	DECLARACAO  Tab {Inserir(&saida,"local ");} T_STRING {Inserir(&saida,$4); Inserir(&varDeclaradas, $4);} NewLine
 	;
 	
 Atribui:
@@ -75,10 +75,11 @@ Estrutura:
 
 Entrada: TEXTO {Inserir(&saida,$1);}
        	| Variavel
+	| Condicao
        	;
 
 Fim:
-       	TERMINOU {qntEnd++; Inserir(&saida,"end\n");}
+       	TERMINOU Tab {qntEnd++; Inserir(&saida,"end\n");}
        	;
 FimIf:
 	Fim
@@ -87,33 +88,34 @@ FimIf:
 	;
 
 ElseIf:
-	ELSEIF {qntEnd++; Inserir(&saida, "elseif "); qntIf++; qntEstru++;} Condicao Then {tab++;} NewLine Tab Comando NewLine {tab--;} Tab FimIf
+	ELSEIF Tab {qntEnd++; Inserir(&saida, "elseif "); qntIf++; qntEstru++;} Condicao {qntCondicao++;} Then {tab++;} NewLine Comando {tab--;} FimIf
 	;
 Else:
-	ELSE {qntEnd++; Inserir(&saida, "else"); qntIf++; qntEstru++; qntThen++; qntCondicao++;} {tab++;} NewLine Tab Comando NewLine {tab--;} Tab FimIf
+	ELSE Tab {qntEnd++; Inserir(&saida, "else"); qntIf++; qntEstru++; qntThen++; qntCondicao++;} {tab++;} NewLine Comando  {tab--;} FimIf
   	;
 	
 
 Print:
-   	PRINT { Inserir(&saida,"print("); } Entrada { Inserir(&saida,") ");} NewLine Tab
+   	PRINT Tab { Inserir(&saida,"print("); } Entrada { Inserir(&saida,") ");} NewLine
    	;
    	
 Read:
-	READ Variavel {Inserir(&saida," = io.read()");} NewLine Tab
+	READ Tab Variavel {Inserir(&saida," = io.read()");} NewLine
 	;
 If:
-	IF { qntIf++; qntEstru++;Inserir(&saida,"if ");} Condicao Then {tab++;} NewLine Tab Comando NewLine {tab--;} Tab FimIf
+	IF Tab { qntIf++; qntEstru++;Inserir(&saida,"if ");} Condicao {qntCondicao++;} Then {tab++;} NewLine Comando {tab--;} FimIf
   	;
 While:
-	WHILE { qntIf++; qntEstru++; Inserir(&saida, "while ");} Condicao Do {tab++;} NewLine Tab Comando NewLine {tab--;} Tab Fim
+	WHILE { qntIf++; qntEstru++; Inserir(&saida, "while ");} Condicao {qntCondicao++;} Do {tab++;} NewLine Tab Comando NewLine {tab--;} Tab Fim
 	;
 
 Do:
 	DO {qntThen++; Inserir(&saida," do ");}
+	;
 Condicao:
-  	Numero {qntCondicao++;}
-	| Variavel {qntCondicao++;}
-  	| Condicao Operador Condicao {qntCondicao--;}
+  	Numero 
+	| Variavel 
+  	| Condicao Operador Condicao
   	;
   	
 

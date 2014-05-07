@@ -3,13 +3,13 @@ declare x
 leia x
 declare y
 leia y
-enquanto x < y faca
-imprima "lalalala"
-x = x + 1
+imprima x+1
+se x > y e 2 > 3 entao se 4 < 5 entao declare z
+leia z
+senao se 3 < 4 entao declare h leia h
+senao declare kaka leia kaka imprima kaka
 fim
-se 2 > 3 entao se 3 < 4 entao imprima "lalalalalala"
-fim
-senao imprima "lalalalal2"
+senao imprima "foi ate o final"
 fim
 fim
 fimFunc

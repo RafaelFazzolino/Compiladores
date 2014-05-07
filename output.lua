@@ -1,35 +1,36 @@
 
---Ifs: 4
+--Ifs: 5
 
---Estruturas: 5
+--Estruturas: 6
 
---Ends: 5
+--Ends: 6
 
---Thens: 4
+--Thens: 5
 
---Condicoes: 4
---Variaveis Declaradas: xy
---Variaveis Usadas: xy
+--Condicoes: 5
+--Variaveis Declaradas: xyzhkaka
+--Variaveis Usadas: xyzhkaka
 
 function main()
 	local x
 	x = io.read()
 	local y
 	y = io.read()
-	while x < y do 
-		print("lalalala") 
-		x = x + 1
-		
-	end
-if 2 > 3 then 
-		if 3 < 4 then 
-			print("lalalalalala") 
-			
+	print(x + 1) 
+	if x > y and 2 > 1 then 
+		if 6 < 5 then 
+			local z
+			z = io.read()
+		elseif 5 < 4 then 
+			local h
+			h = io.read()
+		else
+			local kaka
+			kaka = io.read()
+			print(kaka) 
 		end
-
 	else
-		print("lalalalal2") 
-		
+		print("foi ate o final") 
 	end
 end
 main()
