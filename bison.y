@@ -15,8 +15,8 @@
 
 %token <strval> T_NUMBER
 %token <strval> T_STRING TEXTO
-%token AND OU IF ELSEIF DO THEN WHILE ELSE
-%token TERMINOU DECLARACAO FIMFUNC FUNCAO
+%token AND OU IF ELSEIF DO THEN WHILE ELSE NOT VIRGULA
+%token TERMINOU DECLARACAO FIMFUNC FUNCAO ARGUMENTO
 %token <strval> PRINT READ LOCAL 
 %token MAIOR MENOR IGUAL SOMA SUBT MULT DIVIDE ATRIBUI
 
@@ -57,9 +57,18 @@ Comando:  Declare
        	;
        	
 Function:
-	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} {Inserir(&saida,")");} NewLine {tab++;} Corpo {tab--;} Fim {Inserir(&saida,$3); Inserir(&saida, "()");} NewLine
+	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} Argumento {Inserir(&saida,")");} NewLine {tab++;} Corpo {tab--;} Fim {Inserir(&saida,$3); Inserir(&saida, "()");} NewLine
 	;
 	
+Argumento:
+	  ARGUMENTO T_STRING {Inserir(&saida,$2); Inserir(&varDeclaradas, $2);}
+	| ARGUMENTO T_STRING {Inserir(&saida,$2); Inserir(&varDeclaradas, $2);} Virgula Argumento
+	| 
+	;
+Virgula:
+	VIRGULA {Inserir(&saida,", ");}
+	;
+
 Declare:
 	DECLARACAO  Tab {Inserir(&saida,"local ");} T_STRING {Inserir(&saida,$4); Inserir(&varDeclaradas, $4);} NewLine
 	;
@@ -137,6 +146,7 @@ Operador:
   	| IGUAL {Inserir(&saida," == ");}
   	| OU {Inserir(&saida," or ");}
   	| AND {Inserir(&saida," and ");}
+	| NOT {Inserir(&saida," ~= ");}
   	| SOMA {Inserir(&saida, " + ");}
   	| SUBT {Inserir(&saida, " - ");} 
   	| MULT {Inserir(&saida, " * ");} 

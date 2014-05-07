@@ -13,6 +13,8 @@ NUMBER [0-9]
 
 %% /*REGRAS:*/
 
+","								return VIRGULA;
+"espera"							return ARGUMENTO;
 "senao se"							return ELSEIF;
 "fimFunc"					{yyterminate(); return FIMFUNC;}
 (f|F)+(uncao)+						return FUNCAO;
@@ -30,6 +32,7 @@ NUMBER [0-9]
 (\>)+ 					    			return MAIOR;
 (\<)+ 					    			return MENOR;
 (\=)+ 					    			return IGUAL;
+"!="								return NOT;
 (ou)+ 					    			return OU;
 (e)+ 					    			return AND;
 (senao)+ 				    			return ELSE;

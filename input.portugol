@@ -1,10 +1,26 @@
+funcao teste espera num
+imprima "digite o numero:"
+leia num
+imprima num
+fim
+funcao testando espera casa, espera teto, espera lalala
+imprima "funcao casa\n"
+imprima "digite casa:"
+leia casa
+imprima "digite teto:"
+leia teto
+
+imprima teto
+imprima casa
+fim
+
 funcao main
 declare x
 leia x
 declare y
 leia y
 imprima x+1
-se x > y e 2 > 3 entao se 4 < 5 entao declare z
+se x > y e 2 != 3 entao se 4 < 5 entao declare z
 leia z
 senao se 3 < 4 entao declare h leia h
 senao declare kaka leia kaka imprima kaka

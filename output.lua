@@ -1,27 +1,43 @@
 
 --Ifs: 5
 
---Estruturas: 6
+--Estruturas: 8
 
---Ends: 6
+--Ends: 8
 
 --Thens: 5
 
 --Condicoes: 5
---Variaveis Declaradas: xyzhkaka
---Variaveis Usadas: xyzhkaka
+--Variaveis Declaradas: numcasatetolalalaxyzhkaka
+--Variaveis Usadas: numcasatetoxyzhkaka
 
+function teste(num)
+	print("digite o numero:") 
+	num = io.read()
+	print(num) 
+end
+teste()
+function testando(casa, teto, lalala)
+	print("funcao casa\n") 
+	print("digite casa:") 
+	casa = io.read()
+	print("digite teto:") 
+	teto = io.read()
+	print(teto) 
+	print(casa) 
+end
+testando()
 function main()
 	local x
 	x = io.read()
 	local y
 	y = io.read()
 	print(x + 1) 
-	if x > y and 2 > 1 then 
-		if 6 < 5 then 
+	if x > y and 2 ~= 3 then 
+		if 4 < 5 then 
 			local z
 			z = io.read()
-		elseif 5 < 4 then 
+		elseif 3 < 4 then 
 			local h
 			h = io.read()
 		else
