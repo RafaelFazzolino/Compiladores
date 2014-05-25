@@ -94,7 +94,7 @@ void Compara(){
 	tudo = saida;
 	char tipo[100][10];
 	int i=0, k=0;
-	Variavel * aux = temp;
+	Variavel * aux = temp;//Temporaria (testando git)
 	Variavel * aux2 = temp;
 	int linha = 0;
 	while(tudo != NULL){
