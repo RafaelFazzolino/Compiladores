@@ -1,24 +1,29 @@
 %{option main
 
  #include "bison.h"
-
-
+ int contadorDeLinhas =1;
 %}
 /* TIPOS */
 STRING [a-z]+[a-zA-Z0-9]*
-SPACE [ \n\r\t]+
+SPACE [ \r\t]+
 NUMBER [0-9]
 
 
 
 %% /*REGRAS:*/
-
+"\n"								{contadorDeLinhas++;}
+"execute"							return EXECUTE;
+"passa"								return PASSA;
 ","								return VIRGULA;
-"espera"							return ARGUMENTO;
+"espera"							return ESPERA;
 "senao se"							return ELSEIF;
 "fimFunc"					{yyterminate(); return FIMFUNC;}
-(f|F)+(uncao)+						return FUNCAO;
+(f|F)+(uncao)+							return FUNCAO;
 "declare"							return DECLARACAO;
+"("								return LEFT_PAR;
+")"								return RIGHT_PAR;
+"numero"							return NUMERICAL;
+"texto"								return STR;
 (\".*\")+							{yylval.strval = strdup(yytext); return TEXTO;}
 (imprima|imprimir|escreva|escrever)+    			return PRINT;
 (ler|leia|receba|receber)+ 	            			return READ;
@@ -43,6 +48,7 @@ NUMBER [0-9]
 {NUMBER}+                               			{yylval.strval = strdup(yytext); return T_NUMBER;}
 {STRING}				    			{yylval.strval = strdup(yytext); return T_STRING;}
 {SPACE}					    			/*ignore*/
+
 
 
 %%

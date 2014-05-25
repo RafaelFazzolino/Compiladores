@@ -1,11 +1,10 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "listaBison.h"
+#include"listaBison.h"
 #include <string.h>
 
-
-
+//extern int contadorDeLinhas;
 %}
 
 %union {
@@ -14,11 +13,14 @@
 }
 
 %token <strval> T_NUMBER
-%token <strval> T_STRING TEXTO
+%token <strval> T_STRING TEXTO  STR
 %token AND OU IF ELSEIF DO THEN WHILE ELSE NOT VIRGULA
-%token TERMINOU DECLARACAO FIMFUNC FUNCAO ARGUMENTO
+%token TERMINOU DECLARACAO FIMFUNC FUNCAO ESPERA EXECUTE PASSA
 %token <strval> PRINT READ LOCAL 
-%token MAIOR MENOR IGUAL SOMA SUBT MULT DIVIDE ATRIBUI
+%token MAIOR MENOR IGUAL SOMA SUBT MULT DIVIDE ATRIBUI LEFT_PAR RIGHT_PAR
+%token  NUMERICAL
+
+
 
 %start Input
 
@@ -30,140 +32,165 @@ Input:
    ;
 
 Line:
-    Tab Comando NewLine Final
+    Tab Comando NewLine
     ;
 
-Tab:	{Tabulacao(tab);}
+Tab:	
+	{Tabulacao(tab);}
 	;
 
-NewLine:	{qntLinha++; PulaLinha();}
-	| "\n"	{qntLinha++; PulaLinha();}
-	;
-
-Final:
-	|{tab--; } Tab Fim
-	;
-Corpo:
-        |Comando
-	|Estrutura
-	;
-Comando:  Declare
-	| Function
-	| Atribui
-       	| Print
-       	| Read
-       	| Estrutura
-	| Comando Comando
-       	;
-       	
-Function:
-	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ");} T_STRING { Inserir(&saida,$3); Inserir(&saida,"(");} Argumento {Inserir(&saida,")");} NewLine {tab++;} Corpo {tab--;} Fim {Inserir(&saida,$3); Inserir(&saida, "()");} NewLine
+Comando:
+	Verbo
+	| Estrutura
+	| Fim
 	;
 	
-Argumento:
-	  ARGUMENTO T_STRING {Inserir(&saida,$2); Inserir(&varDeclaradas, $2);}
-	| ARGUMENTO T_STRING {Inserir(&saida,$2); Inserir(&varDeclaradas, $2);} Virgula Argumento
-	| 
-	;
-Virgula:
-	VIRGULA {Inserir(&saida,", ");}
-	;
-
-Declare:
-	DECLARACAO  Tab {Inserir(&saida,"local ");} T_STRING {Inserir(&saida,$4); Inserir(&varDeclaradas, $4);} NewLine
-	;
-	
-Atribui:
-	Variavel ATRIBUI {Inserir(&saida, " = ");} Condicao {qntCondicao--;} NewLine Tab
-	; 
-       
-Estrutura:
-	  If
-	| While
-	;
-
-Entrada: TEXTO {Inserir(&saida,$1);}
-       	| Variavel
-	| Condicao
-       	;
-
 Fim:
-       	TERMINOU Tab {qntEnd++; Inserir(&saida,"end\n");}
-       	;
-FimIf:
-	Fim
-       |ElseIf
-       |Else
+	{RemoveTab(&saida); tab--;} TERMINOU {qntEnd++; Inserir(&saida,"end", contadorDeLinhas);}
 	;
-
-ElseIf:
-	ELSEIF Tab {qntEnd++; Inserir(&saida, "elseif "); qntIf++; qntEstru++;} Condicao {qntCondicao++;} Then {tab++;} NewLine Comando {tab--;} FimIf
+	 
+Estrutura:
+	Function
+	| If
 	;
-Else:
-	ELSE Tab {qntEnd++; Inserir(&saida, "else"); qntIf++; qntEstru++; qntThen++; qntCondicao++;} {tab++;} NewLine Comando  {tab--;} FimIf
-  	;
 	
+Function:
+	FUNCAO {qntFuncao++; qntEstru++; Inserir(&saida,"function ", contadorDeLinhas);} T_STRING { Inserir(&saida,$3, contadorDeLinhas); Inserir(&saida,"(", contadorDeLinhas);} Espera {Inserir(&saida,")", contadorDeLinhas);} {tab++;}
+	;
+	
+Espera:
+	ESPERA Espera_Argumentos
+	|
+	;
 
-Print:
-   	PRINT Tab { Inserir(&saida,"print("); } Entrada { Inserir(&saida,") ");} NewLine
-   	;
-   	
-Read:
-	READ Tab Variavel {Inserir(&saida," = io.read()");} NewLine
+Espera_Argumentos:
+	   STR T_STRING {Inserir(&saida,$2, contadorDeLinhas); InserirVariavel(&varDeclaradas, $2, "texto", "local");}
+	|  NUMERICAL T_STRING {Inserir(&saida,$2, contadorDeLinhas); InserirVariavel(&varDeclaradas, $2, "numero", "local");}
+	|  STR T_STRING {Inserir(&saida,$2, contadorDeLinhas); InserirVariavel(&varDeclaradas, $2, "texto", "local");} Virgula Espera_Argumentos
+	|  NUMERICAL T_STRING {Inserir(&saida,$2, contadorDeLinhas); InserirVariavel(&varDeclaradas, $2, "numero", "local");} Virgula Espera_Argumentos
+	;
+	
+ChamadaFunc:
+	EXECUTE T_STRING { Inserir(&saida, $2, contadorDeLinhas); Inserir(&saida, "(", contadorDeLinhas);} Passa {Inserir(&saida,")", contadorDeLinhas);}
+	;
+
+Passa:
+	
+	| PASSA T_STRING {Inserir(&saida, $2, contadorDeLinhas); Inserir(&varUsadas, $2, contadorDeLinhas);}
+	| PASSA Entrada
+
 	;
 If:
-	IF Tab { qntIf++; qntEstru++;Inserir(&saida,"if ");} Condicao {qntCondicao++;} Then {tab++;} NewLine Comando {tab--;} FimIf
-  	;
-While:
-	WHILE { qntIf++; qntEstru++; Inserir(&saida, "while ");} Condicao {qntCondicao++;} Do {tab++;} NewLine Tab Comando NewLine {tab--;} Tab Fim
+	IF { qntIf++; qntEstru++; Inserir(&saida, "if ", contadorDeLinhas);} Expressao {qntCondicao++;} Then {tab++;}
 	;
-
-Do:
-	DO {qntThen++; Inserir(&saida," do ");}
-	;
-Condicao:
-  	Numero 
-	| Variavel 
-  	| Condicao Operador Condicao
-  	;
-  	
-
+	
 Then:
-  	THEN {qntThen++; Inserir(&saida," then ");}
+  	THEN {qntThen++; Inserir(&saida," then ", contadorDeLinhas);}
   	;
+Verbo:
+	Declare
+	| Atribua
+	| Imprima
+	| Leia
+	| ChamadaFunc
+	//| Run
+	;
+
+	
+Declare:
+	DECLARACAO {Inserir(&saida,"local ", contadorDeLinhas);} Var_Declaracao
+	;
+
+Var_Declaracao:
+	  STR T_STRING {Inserir(&saida,$2, contadorDeLinhas); InserirVariavel(&varDeclaradas, $2, "texto", "local"); qntDecl++;}
+	| NUMERICAL T_STRING {Inserir(&saida,$2, contadorDeLinhas); InserirVariavel(&varDeclaradas, $2, "numero", "local"); qntDecl++;}
+	| Var_Declaracao "," {Inserir(&saida, ", ", contadorDeLinhas);} T_STRING {Inserir(&saida,$4, contadorDeLinhas); InserirVariavel(&varDeclaradas, $4, "texto", "local"); qntDecl++;}
+	| Var_Declaracao AND {Inserir(&saida, ", ", contadorDeLinhas);} T_STRING {Inserir(&saida,$4, contadorDeLinhas); InserirVariavel(&varDeclaradas, $4, "texto", "local"); qntDecl++;}
+	;
+
+Aux:
+	Virgula
+	| AND {Inserir(&saida, ", ", contadorDeLinhas);}
+	;
+	
+Atribua:
+	Variavel ATRIBUI {Inserir(&saida, " = ", contadorDeLinhas);} Expressao
+	;
+
+Expressao:
+	Numero
+	| Variavel
+	| Numero Operador Expressao
+	| Variavel Operador Expressao
+	;
+
+
+
+Imprima:
+	PRINT { Inserir(&saida,"print(", contadorDeLinhas); } Entrada { Inserir(&saida,") ", contadorDeLinhas);}
+	;
+
+Entrada:
+	TEXTO {Inserir(&saida,$1, contadorDeLinhas);}
+       	| Expressao
+	;
+
+Leia:
+	READ STR Variavel {Inserir(&saida," = io.read()", contadorDeLinhas);}
+	| READ NUMERICAL Variavel {Inserir(&saida," = io.read(\"*number\")", contadorDeLinhas);}
+	| Leia VIRGULA Leia_Complemento
+	;
+	
+Leia_Complemento:
+	STR  {Inserir(&saida,"\n", contadorDeLinhas);} Variavel {Inserir(&saida," = io.read()", contadorDeLinhas);}
+	| NUMERICAL {Inserir(&saida,"\n", contadorDeLinhas);} Variavel {Inserir(&saida," = io.read(\"*number\")", contadorDeLinhas);}
+	;
+
+
+//Run:
+//	EXECUTE T_STRING {Inserir(&saida, $2); Inserir(&saida,"(");} Argumento {Inserir(&saida,")");}
+//	;
 
 Variavel:
-	T_STRING  { Inserir(&saida,$1); } {Inserir(&varUsadas, $1);}
+	T_STRING  { Inserir(&saida,$1, contadorDeLinhas); }
 	;
-
+	
 Numero:
-	T_NUMBER {Inserir(&saida,$1);}
+	T_NUMBER {Inserir(&saida,$1, contadorDeLinhas);}
    	;
-
+   	
 Operador:
-  	MAIOR  {Inserir(&saida," > ");}
-  	| MENOR {Inserir(&saida," < ");}
-  	| IGUAL {Inserir(&saida," == ");}
-  	| OU {Inserir(&saida," or ");}
-  	| AND {Inserir(&saida," and ");}
-	| NOT {Inserir(&saida," ~= ");}
-  	| SOMA {Inserir(&saida, " + ");}
-  	| SUBT {Inserir(&saida, " - ");} 
-  	| MULT {Inserir(&saida, " * ");} 
-  	| DIVIDE {Inserir(&saida, " / ");} 
-  	| ATRIBUI {Inserir(&saida, " = ");} 
+  	MAIOR  {Inserir(&saida," > ", contadorDeLinhas);}
+  	| MENOR {Inserir(&saida," < ", contadorDeLinhas);}
+  	| IGUAL {Inserir(&saida," == ", contadorDeLinhas);}
+  	| OU {Inserir(&saida," or ", contadorDeLinhas);}
+  	| AND {Inserir(&saida," and ", contadorDeLinhas);}
+	| NOT {Inserir(&saida," ~= ", contadorDeLinhas);}
+  	| SOMA {Inserir(&saida, " + ", contadorDeLinhas);}
+  	| SUBT {Inserir(&saida, " - ", contadorDeLinhas);} 
+  	| MULT {Inserir(&saida, " * ", contadorDeLinhas);} 
+  	| DIVIDE {Inserir(&saida, " / ", contadorDeLinhas);} 
+  	| ATRIBUI {Inserir(&saida, " = ", contadorDeLinhas);} 
   	;
 
+Virgula:
+	VIRGULA {Inserir(&saida,", ", contadorDeLinhas);}
+	;
+
+NewLine:	
+	{qntLinha++; PulaLinha();}
+	;
 
 %%
 
 void main(void){
 	saida = NULL;
+	inic = NULL;
 	varDeclaradas = NULL;
 	varUsadas = NULL;
 	erroSaida = NULL;
 	yyparse();
-	
+	printf("\nLINHAS: %d\n", contadorDeLinhas);
 	printf("\n--Ifs: %d\n", qntIf);
 	printf("\n--Estruturas: %d\n", qntEstru);
 	printf("\n--Ends: %d\n", qntEnd);
@@ -171,30 +198,41 @@ void main(void){
 	printf("\n--Condicoes: %d\n", qntCondicao);
 	
 	printf("--Variaveis Declaradas: ");
-	Imprime(varDeclaradas);
+	ImprimeVariavel(varDeclaradas);
 	printf("\n--Variaveis Usadas: ");
 	Imprime(varUsadas);
 	printf("\n\n");
+	Compara();
 	
 	
 	if(!(qntIf == qntCondicao && qntEstru == qntEnd && qntIf == qntThen))
+	{
 		correto = 0;
+		Inserir(&erroSaida, "\n--Qnt de fim inferior a Qnt de Estruturas", contadorDeLinhas);
+	}
 		
-	
-	if(CheckVariaveis(varDeclaradas, varUsadas) == 0)
+	if(checkTipo == 1){
 		correto = 0;
-	
+	}
+	if(CheckVariaveis(varDeclaradas, varUsadas) == 0)
+	{
+		correto = 0;
+		Inserir(&erroSaida, "\n--Variavel nao declarada foi usada", contadorDeLinhas);
+	}
+	Imprime(erroSaida);
+	printf("\n\n");
 	if(correto)
 		Imprime(saida);
 	else
 	{
-		Imprime(erroSaida);
+		ImprimeErro(erroSaida);
 		printf("\n\n");
 	}
 	
 }
 
 yyerror(char *s){
+	printf("Erro na linha: %d\n", contadorDeLinhas);
 	printf("%s\n", s);
 }
 
