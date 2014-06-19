@@ -26,6 +26,14 @@ typedef struct fila
     struct fila * proximo;
 }Fila;
 
+typedef struct tipo{
+	char nomeTipo[MAX];
+	int linhaTipo;
+	struct tipo * proximo;
+}Tipo;
+Tipo * auxTipo;
+Tipo * tempTipo;
+
 typedef struct variavel
 {
     char nome[MAX];
@@ -51,6 +59,16 @@ Fila * Add(char nome[MAX], int linhaPort)
     return add;
 }
 
+Tipo * AddTipo(char nome[MAX], int linha)
+{
+    Tipo * adicionaTipo = (Tipo*) malloc(sizeof(Tipo));
+    strcpy(adicionaTipo->nomeTipo, nome);
+    adicionaTipo->linhaTipo = linha;
+    adicionaTipo->proximo == NULL;
+
+    return adicionaTipo;
+}
+
 Variavel * AddVariavel(char nome[MAX], char tipo[MAX], char escopo[MAX])
 {
     Variavel * add = (Variavel*) malloc(sizeof(Variavel));
@@ -60,6 +78,26 @@ Variavel * AddVariavel(char nome[MAX], char tipo[MAX], char escopo[MAX])
     add->proximo == NULL;
 
     return add;
+}
+
+void InserirTipo(Tipo ** temp, char nomeTipo[MAX], int linhaTipo)
+{
+	Tipo * aux = AddTipo(nomeTipo, linhaTipo);
+	Tipo * head = *temp;
+	if(*temp == NULL)
+	{
+		*temp = aux;
+	}
+	else
+	{
+		struct tipo * aux2 = *temp;
+		while(aux2->proximo != NULL)
+		{
+			aux2 = aux2->proximo;
+		}
+
+		aux2->proximo = aux;
+	}
 }
 
 void Inserir(Fila ** temp, char nome[MAX], int linhaPort)
@@ -90,61 +128,72 @@ void Inserir(Fila ** temp, char nome[MAX], int linhaPort)
 void Compara(){
 	Variavel * temp;
 	temp = varDeclaradas;
-	Fila * tudo;
-	tudo = saida;
-	char tipo[100][10];
+	Fila * saidaLua;
+	saidaLua = saida;
+	
 	int i=0, k=0;
-	Variavel * aux = temp;//Temporaria (testando git)
-	Variavel * aux2 = temp;
+	Variavel * listaVariaveisDeclaradas = temp;
+	Variavel * listaVariaveisDeclaradas2 = temp;
 	int linha = 0;
-	while(tudo != NULL){
-		if(strcmp(tudo->string, "if ") == 0){ /*IF para achar a comparação de duas variáveis de tipos diferentes*/		
-			linha = tudo->linhaPort;
-			while(strcmp(tudo->string, " then ") != 0){
-				aux = temp;
-				while(aux != NULL){
-					if(strcmp( aux->nome, tudo->string)==0){
-						strcpy(tipo[i], aux->tipo);
-						i++;
+	while(saidaLua != NULL){
+		if(strcmp(saidaLua->string, "if ") == 0){ /*IF para achar a comparação de duas variáveis de tipos diferentes*/		
+			linha = saidaLua->linhaPort;
+			while(strcmp(saidaLua->string, " then ") != 0){
+				listaVariaveisDeclaradas = temp;
+				while(listaVariaveisDeclaradas != NULL){
+					if(strcmp( listaVariaveisDeclaradas->nome, saidaLua->string)==0){
+						InserirTipo(&tempTipo, listaVariaveisDeclaradas->tipo, saidaLua->linhaPort);
 					}
-					aux = aux->proximo;
+					listaVariaveisDeclaradas = listaVariaveisDeclaradas->proximo;
 				}
-				tudo = tudo->proximo;
-				
+				saidaLua = saidaLua->proximo;
 			}
 		}
-		aux = temp;
-		while(aux != NULL){
-			if(strcmp( aux->nome, tudo->string)==0){ /*IF para achar atribuição de variaveis de tipos diferentes*/
-				linha = tudo->linhaPort;
-				if(strcmp(tudo->proximo->string, " = ")==0){
-					strcpy(tipo[i], aux->tipo);
-					i++;
-					while(aux2 != NULL){
-						if(strcmp( aux2->nome, tudo->proximo->proximo->string)==0){
-							strcpy(tipo[i], aux2->tipo);
-							i++;
-						}
-					aux2 = aux2->proximo;
+		if(strcmp(saidaLua->string, "while ") == 0){ /*IF para achar a comparação de duas variáveis de tipos diferentes*/		
+			linha = saidaLua->linhaPort;
+			while(strcmp(saidaLua->string, "\n") != 0){
+				listaVariaveisDeclaradas = temp;
+				while(listaVariaveisDeclaradas != NULL){
+					if(strcmp( listaVariaveisDeclaradas->nome, saidaLua->string)==0){
+						InserirTipo(&tempTipo, listaVariaveisDeclaradas->tipo, saidaLua->linhaPort);
 					}
-					aux2 = temp;
+					listaVariaveisDeclaradas = listaVariaveisDeclaradas->proximo;
+				}
+				saidaLua = saidaLua->proximo;
+			}
+		}
+		listaVariaveisDeclaradas = temp;
+		while(listaVariaveisDeclaradas != NULL){
+			if(strcmp( listaVariaveisDeclaradas->nome, saidaLua->string)==0){ /*IF para achar atribuição de variaveis de tipos diferentes*/
+				linha = saidaLua->linhaPort;
+				if(strcmp(saidaLua->proximo->string, " = ")==0){
+					InserirTipo(&tempTipo, listaVariaveisDeclaradas->tipo, saidaLua->linhaPort);
+
+					while(listaVariaveisDeclaradas2 != NULL){
+						if(strcmp( listaVariaveisDeclaradas2->nome, saidaLua->proximo->proximo->string)==0){
+							InserirTipo(&tempTipo, listaVariaveisDeclaradas2->tipo, saidaLua->linhaPort);
+						}
+					listaVariaveisDeclaradas2 = listaVariaveisDeclaradas2->proximo;
+					}
+					listaVariaveisDeclaradas2 = temp;
 					
 				}
 			}			
-			aux = aux->proximo;
+			listaVariaveisDeclaradas = listaVariaveisDeclaradas->proximo;
 		}
-	tudo = tudo->proximo;
+	saidaLua = saidaLua->proximo;
 		
 	}
-	for(k=0 ; k < i-1 ; k++){
-		printf("--k: %s, k+1: %s\n", tipo[k], tipo[k+1]);
-		if(strcmp(tipo[k], tipo[k+1]) != 0){
+
+	while(tempTipo->proximo != NULL){
+		if(strcmp(tempTipo->nomeTipo, tempTipo->proximo->nomeTipo) != 0){
 			checkTipo = 1;
 		}
+		tempTipo = tempTipo->proximo;
 	}
 
 	if(checkTipo)
-		Inserir(&erroSaida, " variaveis de tipos diferentes\n", linha);
+		Inserir(&erroSaida, " variaveis de tipos diferentes\n", tempTipo->linhaTipo);
 }
 			
 	

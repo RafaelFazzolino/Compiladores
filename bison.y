@@ -52,6 +52,9 @@ Fim:
 Estrutura:
 	Function
 	| If
+	| SeNao
+	| SeNaoSe
+	| Enquanto
 	;
 	
 Function:
@@ -83,7 +86,19 @@ Passa:
 If:
 	IF { qntIf++; qntEstru++; Inserir(&saida, "if ", contadorDeLinhas);} Expressao {qntCondicao++;} Then {tab++;}
 	;
-	
+
+SeNao:
+	ELSE { RemoveTab(&saida); tab--; qntEstru++; qntEnd++; Inserir(&saida, "else ", contadorDeLinhas);} {tab++;}
+	;
+
+SeNaoSe:
+	ELSEIF {RemoveTab(&saida); qntEnd++; qntIf++; qntEstru++; tab--;  Inserir(&saida, "elseif ", contadorDeLinhas);} Expressao {qntCondicao++;} Then {tab++;}
+	;
+
+Enquanto:
+	WHILE {qntIf++; qntEstru++; Inserir(&saida, "while ", contadorDeLinhas);} Expressao {qntCondicao++;} {tab++;} {qntThen++;}
+	;
+
 Then:
   	THEN {qntThen++; Inserir(&saida," then ", contadorDeLinhas);}
   	;
@@ -190,18 +205,8 @@ void main(void){
 	varUsadas = NULL;
 	erroSaida = NULL;
 	yyparse();
-	printf("\nLINHAS: %d\n", contadorDeLinhas);
-	printf("\n--Ifs: %d\n", qntIf);
-	printf("\n--Estruturas: %d\n", qntEstru);
-	printf("\n--Ends: %d\n", qntEnd);
-	printf("\n--Thens: %d\n", qntThen);
-	printf("\n--Condicoes: %d\n", qntCondicao);
 	
-	printf("--Variaveis Declaradas: ");
-	ImprimeVariavel(varDeclaradas);
-	printf("\n--Variaveis Usadas: ");
-	Imprime(varUsadas);
-	printf("\n\n");
+	
 	Compara();
 	
 	
@@ -219,12 +224,22 @@ void main(void){
 		correto = 0;
 		Inserir(&erroSaida, "\n--Variavel nao declarada foi usada", contadorDeLinhas);
 	}
-	Imprime(erroSaida);
-	printf("\n\n");
+
 	if(correto)
 		Imprime(saida);
 	else
 	{
+		printf("\n--Ifs: %d\n", qntIf);
+	printf("\n--Estruturas: %d\n", qntEstru);
+	printf("\n--Ends: %d\n", qntEnd);
+	printf("\n--Thens: %d\n", qntThen);
+	printf("\n--Condicoes: %d\n", qntCondicao);
+	
+	printf("--Variaveis Declaradas: ");
+	ImprimeVariavel(varDeclaradas);
+	printf("\n--Variaveis Usadas: ");
+	Imprime(varUsadas);
+	printf("\n\n");
 		ImprimeErro(erroSaida);
 		printf("\n\n");
 	}
