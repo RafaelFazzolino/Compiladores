@@ -96,7 +96,7 @@ SeNaoSe:
 	;
 
 Enquanto:
-	WHILE {qntIf++; qntEstru++; Inserir(&saida, "while ", contadorDeLinhas);} Expressao {qntCondicao++;} {tab++;} {qntThen++;}
+	WHILE {qntIf++; qntEstru++; Inserir(&saida, "while ", contadorDeLinhas);} Expressao {Inserir(&saida, " do ", contadorDeLinhas);} {qntCondicao++;} {tab++;} {qntThen++;}
 	;
 
 Then:
